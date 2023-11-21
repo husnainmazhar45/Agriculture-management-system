@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "231066482438",
+    "project_id": "zameen-dost-773f8",
+    "storage_bucket": "zameen-dost-773f8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:231066482438:android:f42543a6bf53b7a2d99087",
+        "android_client_info": {
+          "package_name": "com.example.test"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDoZQJ27cGiuorcUNbm-HtIf3mNYFYX_iY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
