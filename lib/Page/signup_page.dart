@@ -1,173 +1,409 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '../pagesss/background_img.dart';
-import '../pagesss/banner.dart';
-import '../pagesss/textbox.dart';
-import '../pagesss/roundedbtn.dart';
+import 'package:http/http.dart' as http;
 import 'login_page.dart';
 import 'package:myapp/Widgets/top_to_bottom.dart';
 import 'package:myapp/Widgets/left_to_right.dart';
-import 'package:http/http.dart' as http;
 
-class SignUpPage extends StatelessWidget {
-  const SignUpPage ({Key? key}):super(key: key);
+class SignUpPage extends StatefulWidget {
+  const SignUpPage({Key? key}) : super(key: key);
+
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: <Widget>[
-          // Background image
-          BackgroundWidget(imageUrl: 'assets/1.jpg'),
-          Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  colors: [
-                    Colors.black,
-                    Colors.black.withOpacity(0.5),
-                    Colors.black.withOpacity(0.10),
-                    Colors.black.withOpacity(0.5),
-                  ]
-              ),
-            ),
-          ),
-          // Content
-          SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                SizedBox(height: 100), // Adjust the spacing as needed
-                BannerText(text: "Signup"),
-                Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: SignUpForm(),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  _MyRegisterState createState() => _MyRegisterState();
 }
 
-class SignUpForm extends StatefulWidget {
-  @override
-  _SignUpFormState createState() => _SignUpFormState();
-}
+class _MyRegisterState extends State<SignUpPage> {
+  TextEditingController nameController = TextEditingController();
+  TextEditingController fullnameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController reenterpasswordController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
+  String message = "";
 
-class _SignUpFormState extends State<SignUpForm> {
-  final TextEditingController textController1 = TextEditingController();
-  final TextEditingController textController2 = TextEditingController();
-  final TextEditingController textController3 = TextEditingController();
-  final TextEditingController textController4 = TextEditingController();
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  /*Future<void> signUp() async {
-    final response = await http.post(
-      Uri.parse('http://10.5.41.128/Zameen_Dost/Sign_Up.php'),
-      body: {
-        'User_Name': textController1.text,
-        'Email': textController2.text,
-        'Password': textController3.text,
-        'ReenterPassword': textController4.text,
-      },
-    );
+  String nameHint = "Name";
+  String fullnameHint = "Full Name";
+  String emailHint = "Email";
+  String phoneHint = "Phone";
+  String passwordHint = "Password";
+  String addressHint = "Address";
+  Future<void> signUp() async {
+    String name = nameController.text;
+    String fullname = fullnameController.text;
+    String email = emailController.text;
+    String phone = phoneController.text;
+    String password = passwordController.text;
+    String reenterpassword = reenterpasswordController.text;
+    String address = addressController.text;
 
-    if (response.statusCode == 200) {
-      print(response.body); // Display the response from the PHP script
+    // Email format validation using regular expression
+    RegExp gmailRegex = RegExp(r'^[a-zA-Z0-9_.+-]+@gmail\.com$');
+    // Check if all fields are filled and text not equal to hint text
+    if (name.isNotEmpty &&
+        fullname.isNotEmpty &&
+        email.isNotEmpty &&
+        phone.isNotEmpty &&
+        password.isNotEmpty &&
+        address.isNotEmpty &&
+        name != nameHint &&
+        fullname != fullnameHint &&
+        email != emailHint &&
+        phone != phoneHint &&
+        password != passwordHint &&
+        address != addressHint) {
+      // Check if email is in the correct format
+      if (gmailRegex.hasMatch(email)) {
+        // Check if password and confirm password match
+        if (password == reenterpassword) {
+          final response = await http.post(
+            Uri.parse('http://localhost/Zameen_Dost/Sign_Up.php'),
+            body: {
+              'username': nameController.text,
+              'Full_Name': fullnameController.text,
+              'Email': emailController.text,
+              'Phone_Number': phoneController.text,
+              'Password': passwordController.text,
+              'address': addressController.text,
+            },
+          );
+
+          if (response.statusCode == 200) {
+            // Navigate to the next screen or perform the desired action
+            message = 'Sign-up successful';
+            _showSuccessDialog(context);
+          } else {
+            // Display an error message
+            message = 'Sign-up failed';
+            _showErrorDialog(context);
+          }
+        } else {
+          // Display an error message for password mismatch
+          message = 'Password and Confirm Password do not match';
+          _showErrorDialog(context);
+        }
+      } else {
+        // Display an error message for invalid email format
+        message = 'Please enter a valid email address';
+        _showErrorDialog(context);
+      }
     } else {
-      print('Failed to register.');
+      // Display an error message for empty or hint text values
+      message = 'Please enter valid values';
+      _showErrorDialog(context);
     }
-  }*/
-  bool showSpinner=false;
-  String email='';
-  String password='';
-  final _auth=FirebaseAuth.instance;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Column(
-        children:<Widget> [
-          SizedBox(height: 60.00),
-          TransparentTextBox(
-            width: 300,
-            hintText: 'Enter Username',
-            controller: textController1,
-          ),
-          SizedBox(height: 30.00),
-          TransparentTextBox(
-            width: 300,
-            hintText: 'Enter Email',
-            controller: textController2,
-          ),
-          SizedBox(height: 30.00),
-          TransparentTextBox(
-            width: 300,
-            hintText: 'Enter Password',
-            controller: textController3,
-          ),
-          SizedBox(height: 30.00),
-          TransparentTextBox(
-            width: 300,
-            hintText: 'ReEnter Password',
-            controller: textController4,
-          ),
-          SizedBox(height: 30.00),
-          TransparentButtonWithArrow(
-              text: 'Signup',
-              onPressed:()async {
-                //signUp();
-                setState(() {
-                  showSpinner=true;
-                });
-                try{
-                  _auth.createUserWithEmailAndPassword(
-                      email: textController2.text,
-                      password: textController3.text
-                  )
-                      .then((value) => {
-                    setState(() {
-                      showSpinner=false;
-                    }),
-                  Navigator.of(context).push(_buildPageRoute())
-                  });
-                }
-                catch(e){
-                  print(e);
-                }
-              }
-          ),
-          SizedBox(height: 30.00),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                "Have an account?",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
+    return Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+            image: AssetImage('assets/register.png'), fit: BoxFit.cover),
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+        ),
+        body: SingleChildScrollView(
+          child: Stack(
+            children: [
+              Container(
+                padding: EdgeInsets.only(left: 35, top: 30),
+                child: Text(
+                  'Create\nAccount',
+                  style: TextStyle(color: Colors.white, fontSize: 33),
                 ),
               ),
-              SizedBox(height: 20), // Adding space between the text and button
-              TextButton(
-                onPressed: () {
-                  // Add your sign-in logic here
-                  Navigator.of(context).push( _buildPagerighttoleftRoute());
-                },
-                style: TextButton.styleFrom(
-                  backgroundColor: Colors.transparent,
-                ),
-                child: Text(
-                  "Sign In",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
+              SingleChildScrollView(
+                child: Container(
+                  padding: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height * 0.28),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(left: 35, right: 35),
+                        child: Column(
+                          children: [
+                            TextField(
+                              controller: nameController,
+                              style: TextStyle(color: Colors.white),
+                              decoration: InputDecoration(
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: BorderSide(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: BorderSide(
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  hintText: "User Name",
+                                  hintStyle: TextStyle(color: Colors.white),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  )),
+                            ),
+                            SizedBox(
+                              height: 30,
+                            ),
+                            TextField(
+                              controller: fullnameController,
+                              style: TextStyle(color: Colors.white),
+                              decoration: InputDecoration(
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: BorderSide(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: BorderSide(
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  hintText: "Full Name",
+                                  hintStyle: TextStyle(color: Colors.white),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  )),
+                            ),
+                            SizedBox(
+                              height: 30,
+                            ),
+                            TextField(
+                              controller: emailController,
+                              style: TextStyle(color: Colors.white),
+                              decoration: InputDecoration(
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: BorderSide(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: BorderSide(
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  hintText: "Email",
+                                  hintStyle: TextStyle(color: Colors.white),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  )),
+                            ),
+                            SizedBox(
+                              height: 30,
+                            ),
+                            TextField(
+                              controller: phoneController,
+                              style: TextStyle(color: Colors.white),
+                              decoration: InputDecoration(
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: BorderSide(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: BorderSide(
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  hintText: "Phone Number",
+                                  hintStyle: TextStyle(color: Colors.white),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  )),
+                            ),
+                            SizedBox(
+                              height: 30,
+                            ),
+                            TextField(
+                              controller: passwordController,
+                              style: TextStyle(color: Colors.white),
+                              obscureText: true,
+                              decoration: InputDecoration(
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: BorderSide(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: BorderSide(
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  hintText: "Password",
+                                  hintStyle: TextStyle(color: Colors.white),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  )),
+                            ),
+                            SizedBox(
+                              height: 30,
+                            ),
+                            TextField(
+                              controller: reenterpasswordController,
+                              style: TextStyle(color: Colors.white),
+                              decoration: InputDecoration(
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: BorderSide(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: BorderSide(
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  hintText: "Re Enter password",
+                                  hintStyle: TextStyle(color: Colors.white),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  )),
+                            ),
+                            SizedBox(
+                              height: 30,
+                            ),
+                            TextField(
+                              controller: addressController,
+                              style: TextStyle(color: Colors.white),
+                              decoration: InputDecoration(
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: BorderSide(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: BorderSide(
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  hintText: "Address",
+                                  hintStyle: TextStyle(color: Colors.white),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  )),
+                            ),
+                            SizedBox(
+                              height: 40,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Sign Up',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 27,
+                                      fontWeight: FontWeight.w700),
+                                ),
+                                CircleAvatar(
+                                  radius: 30,
+                                  backgroundColor: Color(0xff4c505b),
+                                  child: IconButton(
+                                      color: Colors.white,
+                                      onPressed: () {
+                                        signUp();
+                                      },
+                                      icon: Icon(
+                                        Icons.arrow_forward,
+                                      )),
+                                )
+                              ],
+                            ),
+                            SizedBox(
+                              height: 40,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pushNamed(context, 'login');
+                                  },
+                                  child: Text(
+                                    'Sign In',
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                        decoration: TextDecoration.underline,
+                                        color: Colors.white,
+                                        fontSize: 18),
+                                  ),
+                                  style: ButtonStyle(),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                      )
+                    ],
                   ),
                 ),
               ),
             ],
           ),
-        ],
+        ),
       ),
+    );
+  }
+
+  void _showSuccessDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.white.withOpacity(0.6),
+          title: Text(message),
+          //content: Text('This is a small popup message box.'),
+          actions: <Widget>[
+            ElevatedButton(
+              onPressed: () {
+                // Perform 'OK' action here
+                Navigator.of(context)
+                    .push(_buildPagerighttoleftRoute()); // Close the dialog
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showErrorDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.white.withOpacity(0.6),
+          title: Text(message),
+          //content: Text('This is a small popup message box.'),
+          actions: <Widget>[
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
     );
   }
 }
@@ -176,7 +412,8 @@ class _SignUpFormState extends State<SignUpForm> {
 Route _buildPageRoute() {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => SlideInWidget(
-      child: LogInPage(), // You can replace this with the content of the animated page
+      child:
+          LogInPage(), // You can replace this with the content of the animated page
     ),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       return SlideTransition(
@@ -187,21 +424,25 @@ Route _buildPageRoute() {
           CurvedAnimation(
             curve: Curves.easeOut,
             parent: animation,
-            reverseCurve: Curves.easeOut.flipped, // Reverse for slower animation
+            reverseCurve:
+                Curves.easeOut.flipped, // Reverse for slower animation
           ),
         ),
         child: child,
       );
     },
-    transitionDuration: Duration(seconds: 2), // Custom animation duration (2 seconds)
+    transitionDuration:
+        Duration(seconds: 2), // Custom animation duration (2 seconds)
   );
 }
 
 //used to open page from left to right
 Route _buildPagerighttoleftRoute() {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => SlideInlefttorightWidget(
-      child: LogInPage(), // You can replace this with the content of the animated page
+    pageBuilder: (context, animation, secondaryAnimation) =>
+        SlideInlefttorightWidget(
+      child:
+          LogInPage(), // You can replace this with the content of the animated page
     ),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       return SlideTransition(
@@ -212,12 +453,14 @@ Route _buildPagerighttoleftRoute() {
           CurvedAnimation(
             curve: Curves.easeOut,
             parent: animation,
-            reverseCurve: Curves.easeOut.flipped, // Reverse for slower animation
+            reverseCurve:
+                Curves.easeOut.flipped, // Reverse for slower animation
           ),
         ),
         child: child,
       );
     },
-    transitionDuration: Duration(seconds: 2), // Custom animation duration (2 seconds)
+    transitionDuration:
+        Duration(seconds: 2), // Custom animation duration (2 seconds)
   );
 }

@@ -7,6 +7,18 @@ class WeatherPage extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size=MediaQuery.of(context).size;
     return Scaffold(
+       appBar: AppBar(
+         backgroundColor: Color(0xff1A237E),
+        title: Text('Weather',
+        style: TextStyle(color: Colors.white),),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          color: Colors.white,
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
       body: Container(
         child: Column(
           children: [
@@ -96,6 +108,7 @@ class WeatherPage extends StatelessWidget {
           ],
         ),
       ),
+      
     );
   }
 }

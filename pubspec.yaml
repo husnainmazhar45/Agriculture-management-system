@@ -39,10 +39,16 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
-  firebase_auth: ^4.14.0
+  shared_preferences: ^2.2.2
+  flutter_secure_storage: ^9.0.0
+  outline_gradient_button: ^2.0.1+1
   google_fonts: ^3.0.1
   get: ^4.6.1
   provider: ^5.0.0
+  line_awesome_flutter: ^2.0.0
+  flutter_neumorphic: ^3.2.0
+  intl: ^0.18.1
+  flutter_inappwebview: ^5.8.0
 
 dev_dependencies:
   flutter_test:
@@ -81,6 +87,27 @@ flutter:
     - assets/sun.png
     - assets/wind.png
     - assets/storm.png
+    - assets/register.png
+    - assets/login.png
+    - assets/register.png
+    - assets/Apple.png
+    - assets/Cherry.png
+    - assets/Grape.png
+    - assets/GreenLemon.png
+    - assets/Orange.png
+    - assets/Lemon.png
+    - assets/Pomegranate.png
+    - assets/Puneapple.png
+    - assets/wheats.jpg
+    - assets/Broccoli.png
+    - assets/Cabbage.png
+    - assets/Carrot.png
+    - assets/Corn.png
+    - assets/Cucumber.png
+    - assets/Onion.png
+    - assets/Potato.png
+    - assets/Redchili.png
+    - assets/Tomato.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

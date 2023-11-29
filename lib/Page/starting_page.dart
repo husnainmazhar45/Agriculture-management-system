@@ -1,23 +1,21 @@
 import 'package:flutter/material.dart';
 import '../pagesss/background_img.dart';
 import '../Widgets/slidin.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'login_page.dart';
+import '../Widgets/horizontal_strip.dart';
+
 class StartingPage extends StatefulWidget {
   @override
-  _SplashScreenState createState() => _SplashScreenState();
+  SplashScreenState createState() => SplashScreenState();
 }
 
-class _SplashScreenState extends State<StartingPage> {
+class SplashScreenState extends State<StartingPage> {
+  static const String KEYLOGIN="login";
   @override
   void initState() {
     super.initState();
-
-    // Delay the navigation to the other file
-    Future.delayed(const Duration(seconds: 2), () {
-      Navigator.of(context).push(SlideInPageRoute(
-        builder: (context) => LogInPage(),
-      ));
-    });
+    whereToGo();
   }
 
   @override
@@ -44,5 +42,30 @@ class _SplashScreenState extends State<StartingPage> {
         ],
       ),
     );
+  }
+
+  void whereToGo() async {
+    var SharedPref = await SharedPreferences.getInstance();
+    var islogedin=SharedPref.getBool(KEYLOGIN);
+    // Delay the navigation to the other file
+    Future.delayed(const Duration(seconds: 2), () {
+      if(islogedin!=null){
+        if(islogedin){
+          Navigator.pushReplacement(context,SlideInPageRoute(
+        builder: (context) => MyBottomNavigation(),
+      ));
+        }
+        else{
+          Navigator.pushReplacement(context,SlideInPageRoute(
+        builder: (context) => LogInPage(),
+      ));
+        }
+      }
+      else{
+        Navigator.pushReplacement(context,SlideInPageRoute(
+        builder: (context) => LogInPage(),
+      ));
+      }
+    });
   }
 }

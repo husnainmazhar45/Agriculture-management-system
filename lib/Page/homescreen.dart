@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/Page/Add_Crops.dart';
+import 'package:myapp/Page/login_page.dart';
 import 'package:myapp/Page/weather_page.dart';
-import '../Widgets/theme_changer_widget.dart';
 import '../pagesss/roundedsimplebtn.dart';
 import 'package:myapp/pagesss/boxes.dart';
 import 'package:myapp/pagesss/rounded_boxes.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'ShopPage.dart';
 
 class MyApp extends StatelessWidget {
   @override
@@ -13,37 +16,49 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
 class MyHomePage extends StatefulWidget {
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  bool isSwitched=false;
+  bool isSwitched = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Home'),
-        actions:<Widget> [
+        title: Text(
+          'Home',
+          style: TextStyle(color: Colors.white),
+        ),
+        actions: <Widget>[
           Padding(
               padding: const EdgeInsets.symmetric(horizontal: 5),
-              child:CircleAvatar(
+              child: CircleAvatar(
                 radius: 16,
                 backgroundColor: Color(0xFFF3E5F5),
-                child: Icon(Icons.shopping_cart_outlined,size:22,color: Colors.black,),
-
+                child: Icon(
+                  Icons.shopping_cart_outlined,
+                  size: 22,
+                  color: Colors.black,
+                ),
               )),
           CircleAvatar(
             radius: 16,
             backgroundColor: Color(0xFFF3E5F5),
-            child: Icon(Icons.notifications_none,size:22,color: Colors.black,
+            child: Icon(
+              Icons.notifications_none,
+              size: 22,
+              color: Colors.black,
             ),
           ),
           Builder(
-              builder: (context) => IconButton(onPressed: (){
-                Scaffold.of(context).openEndDrawer();
-              }, icon: Icon(Icons.more_vert_rounded))),
+              builder: (context) => IconButton(
+                  onPressed: () {
+                    Scaffold.of(context).openEndDrawer();
+                  },
+                  icon: Icon(Icons.more_vert_rounded, color: Colors.white))),
           /*Padding(
               padding: const EdgeInsets.symmetric(horizontal: 2),
             child:CircleAvatar(
@@ -58,7 +73,9 @@ class _MyHomePageState extends State<MyHomePage> {
             builder: (context) => IconButton(onPressed: (){
               Scaffold.of(context).openEndDrawer();
             }, icon: Icon(Icons.home))),*/
+        iconTheme: IconThemeData(color: Colors.white),
       ),
+      backgroundColor: Colors.white,
       body: MyBody(),
       drawer: Drawer(
         backgroundColor: Colors.green.shade900,
@@ -74,7 +91,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: [
                   CircleAvatar(
                     radius: 50,
-                    backgroundImage: AssetImage('assets/1.jpg'), // You should replace this with your profile image asset or URL
+                    backgroundImage: AssetImage(
+                        'assets/1.jpg'), // You should replace this with your profile image asset or URL
                   ),
                   SizedBox(height: 10),
                   Text(
@@ -89,138 +107,174 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             SizedBox(height: 80),
             ListTile(
-              leading: Icon(Icons.feedback,color: Colors.white),
+              leading: Icon(Icons.feedback, color: Colors.white),
               title: Text(
-                'FeedBack',style: TextStyle(
-                color: Colors.white, // Change the text color of the Home option
-              ),),
+                'FeedBack',
+                style: TextStyle(
+                  color:
+                      Colors.white, // Change the text color of the Home option
+                ),
+              ),
               onTap: () {
                 // Add your action for the Home option
               },
             ),
             Divider(
-              color: Colors.white,    // Change the color here
+              color: Colors.white, // Change the color here
               thickness: 1.0,
               //height: 5.0,                    // Set the width (thickness)
-              indent: 22.0,                   // Set the left indent
+              indent: 22.0, // Set the left indent
               endIndent: 22.0,
             ),
             ListTile(
-              leading: Icon(Icons.share,color: Colors.white),
-              title: Text('Share'
-                ,style: TextStyle(
-                  color: Colors.white, // Change the text color of the Home option
-                ),),
+              leading: Icon(Icons.share, color: Colors.white),
+              title: Text(
+                'Share',
+                style: TextStyle(
+                  color:
+                      Colors.white, // Change the text color of the Home option
+                ),
+              ),
               onTap: () {
                 // Add your action for the Settings option
               },
             ),
             Divider(
-              color: Colors.white,    // Change the color here
+              color: Colors.white, // Change the color here
               thickness: 1.0,
               //height: 5.0,                    // Set the width (thickness)
-              indent: 22.0,                   // Set the left indent
+              indent: 22.0, // Set the left indent
               endIndent: 22.0,
             ),
             ListTile(
-              leading: Icon(Icons.star_rate,color: Colors.white),
-              title: Text('Rate Us',style: TextStyle(
-                color: Colors.white, // Change the text color of the Home option
-              ),),
+              leading: Icon(Icons.star_rate, color: Colors.white),
+              title: Text(
+                'Rate Us',
+                style: TextStyle(
+                  color:
+                      Colors.white, // Change the text color of the Home option
+                ),
+              ),
               onTap: () {
                 // Add your action for the Profile option
               },
             ),
             Divider(
-              color: Colors.white,    // Change the color here
+              color: Colors.white, // Change the color here
               thickness: 1.0,
               //height: 5.0,                    // Set the width (thickness)
-              indent: 22.0,                   // Set the left indent
+              indent: 22.0, // Set the left indent
               endIndent: 22.0,
             ),
             ListTile(
-              leading: Icon(Icons.privacy_tip,color: Colors.white),
-              title: Text('Privacy Policy',style: TextStyle(
-                color: Colors.white, // Change the text color of the Home option
-              ),),
+              leading: Icon(Icons.privacy_tip, color: Colors.white),
+              title: Text(
+                'Privacy Policy',
+                style: TextStyle(
+                  color:
+                      Colors.white, // Change the text color of the Home option
+                ),
+              ),
               onTap: () {
                 // Add your action for the Notifications option
               },
             ),
             Divider(
-              color: Colors.white,    // Change the color here
+              color: Colors.white, // Change the color here
               thickness: 1.0,
               //height: 5.0,                    // Set the width (thickness)
-              indent: 22.0,                   // Set the left indent
+              indent: 22.0, // Set the left indent
               endIndent: 22.0,
             ),
             ListTile(
-              leading: Icon(Icons.exit_to_app,color: Colors.white),
-              title: Text('Logout',style: TextStyle(
-                color: Colors.white, // Change the text color of the Home option
-              ),),
-              onTap: () {
-                // Add your action for the Logout option
+              leading: Icon(Icons.exit_to_app, color: Colors.white),
+              title: Text(
+                'Logout',
+                style: TextStyle(
+                  color:
+                      Colors.white, // Change the text color of the Home option
+                ),
+              ),
+              onTap: () async {
+                SharedPreferences pref = await SharedPreferences.getInstance();
+                await pref.clear();
+                Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (context) => LogInPage()),
+                    (route) => false);
               },
             ),
             Divider(
-              color: Colors.white,    // Change the color here
+              color: Colors.white, // Change the color here
               thickness: 1.0,
               //height: 5.0,                    // Set the width (thickness)
-              indent: 22.0,                   // Set the left indent
+              indent: 22.0, // Set the left indent
               endIndent: 22.0,
             ),
             ListTile(
                 title: Padding(
-                  padding: EdgeInsets.only(left: 50.0), // Add space before the title text
-                  child: Text('Theme Change',style: TextStyle(
-                    color: Colors.white, // Change the text color of the Home option
-                  ),),
+                  padding: EdgeInsets.only(
+                      left: 50.0), // Add space before the title text
+                  child: Text(
+                    'Theme Change',
+                    style: TextStyle(
+                      color: Colors
+                          .white, // Change the text color of the Home option
+                    ),
+                  ),
                 ),
-              trailing: Switch(
-                  value: isSwitched, onChanged: (value){
-                setState(() {
-                  isSwitched=value;
-                });
-              })
-            ),
+                trailing: Switch(
+                    value: isSwitched,
+                    onChanged: (value) {
+                      setState(() {
+                        isSwitched = value;
+                      });
+                    })),
           ],
         ),
       ),
-      endDrawer:Drawer(
+      endDrawer: Drawer(
         backgroundColor: Colors.blueGrey.shade900,
         width: 60,
         child: Container(
           child: ListView(
             padding: EdgeInsets.zero,
             children: <Widget>[
-              SizedBox(height: 50,),
+              SizedBox(
+                height: 50,
+              ),
               ListTile(
-                leading: Icon(Icons.person,color: Colors.white),
+                leading: Icon(
+                  Icons.person,
+                  color: Colors.white,
+                  size: 19,
+                ),
                 onTap: () {
                   // Add your action for the Logout option
                 },
               ),
               ListTile(
-                leading: Icon(Icons.local_florist,color: Colors.white),
+                leading:
+                    Icon(Icons.local_florist, color: Colors.white, size: 19),
                 onTap: () {
                   // Add your action for the Logout option
                 },
               ),
               ListTile(
-                leading: Icon(Icons.favorite_border,color: Colors.white),
+                leading:
+                    Icon(Icons.favorite_border, color: Colors.white, size: 19),
                 onTap: () {
                   // Add your action for the Logout option
                 },
               ),
               ListTile(
-                leading: Icon(Icons.shopping_cart,color: Colors.white),
+                leading:
+                    Icon(Icons.shopping_cart, color: Colors.white, size: 19),
                 onTap: () {
                   // Add your action for the Logout option
                 },
               ),
               ListTile(
-                leading: Icon(Icons.cloud,color: Colors.white),
+                leading: Icon(Icons.cloud, color: Colors.white, size: 19),
                 onTap: () {
                   Navigator.push(
                     context,
@@ -229,19 +283,21 @@ class _MyHomePageState extends State<MyHomePage> {
                 },
               ),
               ListTile(
-                leading: Icon(Icons.shopping_bag_outlined,color: Colors.white),
+                leading: Icon(Icons.shopping_bag_outlined,
+                    color: Colors.white, size: 19),
                 onTap: () {
                   // Add your action for the Logout option
                 },
               ),
               ListTile(
-                leading: Icon(Icons.near_me,color: Colors.white),
+                leading: Icon(Icons.near_me, color: Colors.white, size: 19),
                 onTap: () {
                   // Add your action for the Logout option
                 },
               ),
               ListTile(
-                leading: Icon(Icons.qr_code_scanner,color: Colors.white),
+                leading:
+                    Icon(Icons.qr_code_scanner, color: Colors.white, size: 19),
                 onTap: () {
                   // Add your action for the Logout option
                 },
@@ -269,15 +325,16 @@ class MyBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 10),
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
       child: SingleChildScrollView(
         child: Column(
           children: [
             Container(
               height: 150,
               decoration: BoxDecoration(
-                image:DecorationImage(
-                  image: AssetImage('assets/wheat.jpg'), // Replace with your image path
+                image: DecorationImage(
+                  image: AssetImage(
+                      'assets/wheat.jpg'), // Replace with your image path
                   fit: BoxFit.cover,
                 ),
                 color: Colors.lightBlue,
@@ -290,7 +347,7 @@ class MyBody extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children:<Widget> [
+                children: <Widget>[
                   Text(
                     'My Crops',
                     style: TextStyle(color: Colors.black),
@@ -305,14 +362,17 @@ class MyBody extends StatelessWidget {
             ),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children:<Widget>[
+              children: <Widget>[
                 SizedBox(height: 10),
                 CustomRoundedButton(
                     text: 'Add Crops',
                     width: 400, // Set the width
                     height: 50,
-                    onPressed:() {
-
+                    onPressed: () {
+                     Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AddCrops()),
+                  );
                     }),
                 SizedBox(height: 15),
                 Row(
@@ -320,14 +380,16 @@ class MyBody extends StatelessWidget {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        /*Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => SecondPage()),
-                        );*/
+                        Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ShopProducts()),
+                  );
                       },
                       child: RoundedIconBox(
-                        icon: Icons.shopping_bag_outlined, // Replace with your desired icon
-                        text: 'Shop', // Replace with the text you want to display
+                        icon: Icons
+                            .shopping_bag_outlined, // Replace with your desired icon
+                        text:
+                            'Shop', // Replace with the text you want to display
                       ),
                     ),
                     SizedBox(width: 15),
@@ -339,7 +401,8 @@ class MyBody extends StatelessWidget {
                         );*/
                       },
                       child: RoundedIconBox(
-                        icon: Icons.document_scanner_outlined, // Replace with your desired icon
+                        icon: Icons
+                            .document_scanner_outlined, // Replace with your desired icon
                         text: '    Pest Disease',
                       ),
                     ),
@@ -352,8 +415,10 @@ class MyBody extends StatelessWidget {
                         );*/
                       },
                       child: RoundedIconBox(
-                        icon: Icons.storefront_outlined, // Replace with your desired icon
-                        text: 'Near Me', // Replace with the text you want to display
+                        icon: Icons
+                            .storefront_outlined, // Replace with your desired icon
+                        text:
+                            'Near Me', // Replace with the text you want to display
                       ),
                     ),
                   ],
@@ -366,12 +431,14 @@ class MyBody extends StatelessWidget {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => WeatherPage()),
+                          MaterialPageRoute(
+                              builder: (context) => WeatherPage()),
                         );
                       },
                       child: RoundedIconBox(
                         icon: Icons.cloud, // Replace with your desired icon
-                        text: 'Weather', // Replace with the text you want to display
+                        text:
+                            'Weather', // Replace with the text you want to display
                       ),
                     ),
                     SizedBox(width: 15),
@@ -384,7 +451,8 @@ class MyBody extends StatelessWidget {
                       },
                       child: RoundedIconBox(
                         icon: Icons.calculate, // Replace with your desired icon
-                        text: '     Area Calculate', // Replace with the text you want to display
+                        text:
+                            '     Area Calculate', // Replace with the text you want to display
                       ),
                     ),
                   ],
@@ -393,10 +461,11 @@ class MyBody extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children:<Widget> [
+                  children: <Widget>[
                     Text(
                       'News',
-                      style: TextStyle(color: Colors.black,
+                      style: TextStyle(
+                        color: Colors.black,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -404,15 +473,13 @@ class MyBody extends StatelessWidget {
                 ),
                 SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
-                    child:Row(
+                    child: Row(
                       children: [
                         NonAnimatedBoxes(imagePaths: imagePaths),
                         SizedBox(height: 15),
                       ],
-                    )
-                ),
+                    )),
               ],
-
             ),
           ],
         ),
